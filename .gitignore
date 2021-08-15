@@ -1,0 +1,8 @@
+# IDE Files
+.vscode
+
+# binaries
+build
+
+# Libraries
+googletest
