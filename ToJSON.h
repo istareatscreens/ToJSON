@@ -43,7 +43,7 @@ namespace ToJSON
     private:
         string array;
 
-        inline string add_comma()
+        inline string insert_comma()
         {
             return array.empty() ? "" : ",";
         };
@@ -53,16 +53,16 @@ namespace ToJSON
         ToArray(const unsigned int length);
 
         template <typename T>
-        ToArray &add(const T &value)
+        ToArray &insert(const T &value)
         {
-            array += add_comma() + format_value(value);
+            array += insert_comma() + format_value(value);
             return *this;
         };
 
         template <typename... T>
-        ToArray &add_multiple(const T &...values)
+        ToArray &insert_multiple(const T &...values)
         {
-            array += add_comma();
+            array += insert_comma();
             string concat = "";
             for (const auto value : {format_value(values)...})
             {
@@ -102,20 +102,19 @@ namespace ToJSON
     private:
         string json;
 
-        inline string add_key(const string &key)
+        inline string insert_key(const string &key)
         {
             return (json.empty() ? "" : ",") + format_value(key) + ":";
         };
 
-    protected:
     public:
         ToJSON();
         ToJSON(const unsigned int length);
 
         template <typename... T>
-        ToJSON &add_array(const string &key, const T &...values)
+        ToJSON &insert_array(const string &key, const T &...values)
         {
-            json += add_key(key) + "[";
+            json += insert_key(key) + "[";
             string array = "";
             for (const auto value : {format_value(values)...})
             {
@@ -125,12 +124,12 @@ namespace ToJSON
             return *this;
         };
 
-        ToJSON &add_array(const string &key);
+        ToJSON &insert_array(const string &key);
 
         template <typename T>
-        ToJSON &add(const string &key, const T &value)
+        ToJSON &insert(const string &key, const T &value)
         {
-            json += add_key(key) + format_value(value);
+            json += insert_key(key) + format_value(value);
             return *this;
         };
 
@@ -156,9 +155,9 @@ namespace ToJSON
         return json.empty();
     }
 
-    ToJSON &ToJSON::add_array(const string &key)
+    ToJSON &ToJSON::insert_array(const string &key)
     {
-        json += add_key(key) + "[]";
+        json += insert_key(key) + "[]";
         return *this;
     }
 

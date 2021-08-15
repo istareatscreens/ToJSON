@@ -6,6 +6,8 @@ set(Sources
     ToJSONTests.cpp
 )
 
+include(Dart)
+
 add_executable(${This} ${Sources})
 target_link_libraries(${This} PUBLIC 
     gtest_main
