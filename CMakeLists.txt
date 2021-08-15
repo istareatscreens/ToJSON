@@ -7,7 +7,7 @@ project(${This} VERSION 0.0.1
                 HOMEPAGE_URL "https://github.com/istareatscreens/ToJSON" )
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 set_source_files_properties(${This} PROPERTIES COMPILE_FLAGS -Wall -Wcast-align -Wconversion -Wctor-dtor-privacy -Werror -Wextra -Wpedantic -Wshadow -Wsign-conversion)
 
 enable_testing()
