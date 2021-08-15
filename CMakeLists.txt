@@ -12,7 +12,7 @@ set_source_files_properties(${This} PROPERTIES COMPILE_FLAGS -Wall -Wcast-align 
 
 enable_testing()
 
-add_subdirectory(googletest)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
 
 set(_INTERFACE_OR_PUBLIC INTERFACE)
 add_library(${This} INTERFACE)
