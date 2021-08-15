@@ -1,69 +1,122 @@
+#ifndef TOJSON_H
+#define TOJSON_H
+
 #include <string>
 #include <sstream>
 #include <type_traits>
 
-#ifndef TOJSON_H
-#define TOJSON_H
-
-using std::string;
-
-class ToJSON
+namespace ToJSON
 {
-private:
-    string json;
-    template<typename T>
-    string formatValue(const T &input)
+    using std::string;
+
+    class ToJSON
+    {
+    private:
+        string json;
+        template <typename T>
+        string format_value(const T &input)
+        {
+            std::stringstream stream;
+            if (std::is_arithmetic<T>::value)
+            {
+                stream << input;
+            }
+            else
+            {
+                stream << "\"" << input << "\"";
+            }
+            return stream.str();
+        };
+
+        string format_value(const bool &input);
+        string format_value(const char &input);
+        string format_value(const ToJSON &input);
+        string format_value(const string &input);
+
+        inline string add_key(const string &key)
+        {
+            return ((is_empty()) ? "" : json + ", ") + //check if empty
+                   format_value(key) + " : ";
+        };
+
+    public:
+        ToJSON();
+        ToJSON(const unsigned int length);
+        template <typename... T>
+        ToJSON &addPropertyArray(const string &key, const T &...values)
+        {
+            json = add_key(key) + "[";
+            std::stringstream stream;
+            for (const auto value : {format_value(values)...})
+            {
+                stream << "," << value;
+            }
+            json += (stream.str().empty() ? "" : stream.str().substr(1)) + "]";
+            return *this;
+        };
+
+        template <typename T>
+        ToJSON &add_property_value(const string &key, const T &value)
+        {
+            json = add_key(key) + format_value(value);
+            return *this;
+        };
+
+        ToJSON &add_object(const string &key, const ToJSON &object);
+        string to_string() const;
+        bool is_empty() const;
+    };
+
+    ToJSON::ToJSON(const unsigned int length)
+    {
+        json.reserve(length);
+    }
+
+    ToJSON::ToJSON() : json("") {}
+
+    ToJSON &ToJSON::add_object(const string &key, const ToJSON &object)
+    {
+        json = add_key(key) + (object.is_empty() ? "{}" : object.to_string());
+        return *this;
+    }
+
+    string ToJSON::to_string() const
+    {
+        return "{" + json + "}";
+    }
+
+    bool ToJSON::is_empty() const
+    {
+        return json.empty();
+    }
+
+    string ToJSON::format_value(const string &input)
     {
         std::stringstream stream;
-        if(std::is_arithmetic<T>::value)
+        stream << "\"" << input << "\"";
+        return stream.str();
+    }
+
+    string ToJSON::format_value(const bool &input)
+    {
+        if (input)
         {
-            stream<<input;
+            return "true";
         }
         else
         {
-            stream<<"\""<<input<<"\"";
+            return "false";
         }
-        return stream.str();
-    };
+    }
 
-    string formatValue(const bool &input);
-    string formatValue(const char &input);
-    string formatValue(const ToJSON &input);
-    string formatValue(const string &input);
-
-
-    inline string addKey(const string &key)
+    string ToJSON::format_value(const char &input)
     {
-        return ((isEmpty()) ? "" : json + ", ") + //check if empty
-                formatValue(key) + " : ";
-    };
+        return format_value(string{input});
+    }
 
-public:
-    ToJSON();
-    ToJSON(const unsigned int length);
-    template<typename ...T>
-    ToJSON &addPropertyArray(const string &key, const T& ... values)
+    string ToJSON::format_value(const ToJSON &input)
     {
-        json = addKey(key) + "[";
-        std::stringstream stream;
-        for(const auto value: {formatValue(values)...})
-        {
-            stream<<","<<value;
-        }
-        json += (stream.str().empty()? "" : stream.str().substr(1)) + "]";
-        return *this;
-    };
-
-    template<typename T>
-    ToJSON &addPropertyValue(const string &key, const T &value)
-    {
-        json = addKey(key) + formatValue(value);
-        return *this;
-    };
-
-    ToJSON &addObject(const string &key, const ToJSON &object);
-    string getJSON() const;
-    bool isEmpty() const;
-};
-
+        return format_value(input.to_string());
+    }
+}
 #endif
