@@ -7,12 +7,6 @@ TEST(ToJSONTests, TestEmptyToJSON)
     ASSERT_TRUE(obj.empty());
 }
 
-TEST(ToJSONTests, TestEmptyToArray)
-{
-    ToJSON::ToArray arr;
-    ASSERT_TRUE(arr.empty());
-}
-
 TEST(ToJSONTests, TestAddToJSON)
 {
     ToJSON::ToJSON obj;
@@ -50,9 +44,40 @@ TEST(ToJSONTests, TestAddObject)
 TEST(ToJSONTests, TestAddArray)
 {
     ToJSON::ToJSON obj;
+    ToJSON::ToArray arr;
+    ToJSON::ToArray arr2;
+
+    arr.add_multiple(3, "g", 3.3);
     obj.add_array("arr", 1, 3.3, false, "ok")
         .add("int", 3)
-        .add_array("arr2");
+        .add_array("arr2")
+        .add("a1", arr)
+        .add("a2", arr2);
 
-    ASSERT_EQ(obj.str(), "{\"arr\":[1,3.3,false,\"ok\"],\"int\":3,\"arr2\":[]}");
+    ASSERT_EQ(obj.str(), "{\"arr\":[1,3.3,false,\"ok\"],\"int\":3,\"arr2\":[],\"a1\":[3,\"g\",3.3],\"a2\":[]}");
+}
+
+TEST(ToJSONTests, TestEmptyToArray)
+{
+    ToJSON::ToArray arr;
+    ASSERT_TRUE(arr.empty());
+}
+
+TEST(ToJSONTests, TestToArrayAdd)
+{
+    ToJSON::ToArray arr;
+    ToJSON::ToArray arr1;
+    ToJSON::ToJSON obj;
+
+    arr.add("str")
+        .add(-3)
+        .add(3.3)
+        .add(static_cast<char>('a'))
+        .add(static_cast<unsigned int>(33))
+        .add(static_cast<long>(1000000))
+        .add(true)
+        .add(arr1)
+        .add(obj);
+
+    ASSERT_EQ(arr.str(), "[\"str\",-3,3.3,\"a\",33,1000000,true,[],{}]");
 }
