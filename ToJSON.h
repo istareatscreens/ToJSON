@@ -9,10 +9,17 @@ namespace ToJSON
     using std::string;
     class ToJSON;
     class ToArray;
+    class To;
+
+    class Null
+    {
+    protected:
+        static constexpr const char *null{"null"};
+    };
 
     namespace detail
     {
-        class To
+        class To : public Null
         {
         protected:
             template <typename T>
@@ -35,11 +42,13 @@ namespace ToJSON
             static string format_value(const string &input);
             static string format_value(const ToJSON &input);
             static string format_value(const ToArray &input);
+            static string format_value(const Null &input);
         };
     }
 
     class ToArray : public detail::To
     {
+
     private:
         string array;
 
@@ -74,8 +83,6 @@ namespace ToJSON
 
         bool empty() const;
         string str() const;
-
-        friend class ToJSON;
     };
 
     ToArray::ToArray(const unsigned int length)
@@ -168,14 +175,7 @@ namespace ToJSON
 
     string detail::To::format_value(const bool &input)
     {
-        if (input)
-        {
-            return "true";
-        }
-        else
-        {
-            return "false";
-        }
+        return input ? "true" : "false";
     }
 
     string detail::To::format_value(const char &input)
@@ -186,6 +186,11 @@ namespace ToJSON
     string detail::To::format_value(const ToJSON &input)
     {
         return input.str();
+    }
+
+    string detail::To::format_value(const Null &input)
+    {
+        return string{input.null};
     }
 
     string detail::To::format_value(const ToArray &input)

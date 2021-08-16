@@ -26,8 +26,9 @@ cout<<obj.str(); // prints {"num1": 3.3}
 obj.insert("str", "hey")
    .insert("obj",ToJSON::ToJSON{0})
    .insert("arr",ToJSON::ToArray{})
+   .insert("void", ToJSON::Null{});
 
-cout<<obj.str(); // prints {"num1": 3.3,"str":"hey","obj":{},"arr":[]}
+cout<<obj.str(); // prints {"num1": 3.3,"str":"hey","obj":{},"arr":[],"void":null}
 ```
 
 ## ToJSON::insert_array(string key, values... | void) : ToJSON
@@ -76,8 +77,9 @@ cout<<arr.str(); // prints "["hey"]"
 
 arr.insert(3.3)
     .insert(42)
+    .insert(ToJSON::Null{});
 
-cout<<arr.str(); // prints "["hey",3.3,42]"
+cout<<arr.str(); // prints "["hey",3.3,42,null]"
 ```
 
 ## ToArray::insert_multiple(values...) const : string
@@ -110,3 +112,7 @@ ToJSON::ToArray arr;
 
 cout<<arr.str() // prints [] as arr is empty
 ```
+
+## ToNull
+
+Use "ToJSON::Null{}" to pass: null JSON type as value to ToArray or ToJSON, see insert function examples above

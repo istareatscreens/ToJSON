@@ -52,9 +52,10 @@ TEST(ToJSONTests, TestAddArray)
         .insert("int", 3)
         .insert_array("arr2")
         .insert("a1", arr)
-        .insert("a2", arr2);
+        .insert("a2", arr2)
+        .insert("void", ToJSON::Null{});
 
-    ASSERT_EQ(obj.str(), "{\"arr\":[1,3.3,false,\"ok\"],\"int\":3,\"arr2\":[],\"a1\":[3,\"g\",3.3],\"a2\":[]}");
+    ASSERT_EQ(obj.str(), "{\"arr\":[1,3.3,false,\"ok\"],\"int\":3,\"arr2\":[],\"a1\":[3,\"g\",3.3],\"a2\":[],\"void\":null}");
 }
 
 TEST(ToJSONTests, TestEmptyToArray)
@@ -77,7 +78,8 @@ TEST(ToJSONTests, TestToArrayAdd)
         .insert(static_cast<long>(1000000))
         .insert(true)
         .insert(arr1)
-        .insert(obj);
+        .insert(obj)
+        .insert(ToJSON::Null{});
 
-    ASSERT_EQ(arr.str(), "[\"str\",-3,3.3,\"a\",33,1000000,true,[],{}]");
+    ASSERT_EQ(arr.str(), "[\"str\",-3,3.3,\"a\",33,1000000,true,[],{},null]");
 }
