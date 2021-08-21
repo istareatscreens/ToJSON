@@ -23,7 +23,7 @@ namespace ToJSON
         {
         protected:
             template <typename T>
-            static string format_value(const T &input)
+            inline string format_value(const T &input)
             {
                 std::stringstream stream;
                 if (std::is_arithmetic<T>::value)
@@ -37,12 +37,12 @@ namespace ToJSON
                 return stream.str();
             };
 
-            static string format_value(const bool &input);
-            static string format_value(const char &input);
-            static string format_value(const string &input);
-            static string format_value(const ToJSON &input);
-            static string format_value(const ToArray &input);
-            static string format_value(const Null &input);
+            inline string format_value(const bool &input);
+            inline string format_value(const char &input);
+            inline string format_value(const string &input);
+            inline string format_value(const ToJSON &input);
+            inline string format_value(const ToArray &input);
+            inline string format_value(const Null &input);
         };
     }
 
@@ -85,20 +85,20 @@ namespace ToJSON
         string str() const;
     };
 
-    ToArray::ToArray(const unsigned int length)
+    inline ToArray::ToArray(const unsigned int length)
     {
         array.reserve(length);
         array = "";
     }
 
-    ToArray::ToArray() : array("") {}
+    inline ToArray::ToArray() : array("") {}
 
-    bool ToArray::empty() const
+    inline bool ToArray::empty() const
     {
         return array.empty();
     }
 
-    string ToArray::str() const
+    inline string ToArray::str() const
     {
         return "[" + array + "]";
     }
@@ -144,56 +144,56 @@ namespace ToJSON
         bool empty() const;
     };
 
-    ToJSON::ToJSON() : json("") {}
+    inline ToJSON::ToJSON() : json("") {}
 
-    ToJSON::ToJSON(const unsigned int length)
+    inline ToJSON::ToJSON(const unsigned int length)
     {
         json.reserve(length);
         json = "";
     }
 
-    string ToJSON::str() const
+    inline string ToJSON::str() const
     {
         return "{" + json + "}";
     }
 
-    bool ToJSON::empty() const
+    inline bool ToJSON::empty() const
     {
         return json.empty();
     }
 
-    ToJSON &ToJSON::insert_array(const string &key)
+    inline ToJSON &ToJSON::insert_array(const string &key)
     {
         json += insert_key(key) + "[]";
         return *this;
     }
 
-    string detail::To::format_value(const string &input)
+    inline string detail::To::format_value(const string &input)
     {
         return "\"" + input + "\"";
     }
 
-    string detail::To::format_value(const bool &input)
+    inline string detail::To::format_value(const bool &input)
     {
         return input ? "true" : "false";
     }
 
-    string detail::To::format_value(const char &input)
+    inline string detail::To::format_value(const char &input)
     {
         return format_value(string{input});
     }
 
-    string detail::To::format_value(const ToJSON &input)
+    inline string detail::To::format_value(const ToJSON &input)
     {
         return input.str();
     }
 
-    string detail::To::format_value(const Null &input)
+    inline string detail::To::format_value(const Null &input)
     {
         return string{input.null};
     }
 
-    string detail::To::format_value(const ToArray &input)
+    inline string detail::To::format_value(const ToArray &input)
     {
         return input.str();
     }
